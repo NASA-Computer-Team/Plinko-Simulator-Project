@@ -102,4 +102,4 @@ for i in range(2, balls+1):
 
 #Using the 68-95-99.7 rule of the normal curve to compare the result to a true normal curve
 
-  print("Actual: {0:.2f}%        ".format(p1),"{0:.2f}%          ".format(p2),"{0:.2f}%   ".format(p3))
+  print("Actual: {0:.2f}%        ".format(p1),"{0:.2f}%          ".format(p2).ljust(10),"{0:.2f}%   ".format(p3).ljust(10),"Sx of μ: {0:.2f} ".format(sd/math.sqrt(i)).ljust(10))
