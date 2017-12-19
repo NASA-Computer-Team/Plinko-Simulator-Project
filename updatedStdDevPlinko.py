@@ -9,8 +9,8 @@ random.seed()
 balls = int(input("How many balls?"))
 #must be 10 layers as the new format forces a predeclared empty dictionary
 layer = 10
-print("Ideal: 1s    2s    3s")
-print("     68%   95%   99.7%\n")
+print("Ideal: 1s    2s    3s    Sx of μ")
+print("     68%   95%   99.7%    0\n")
 print("Calculating...\n")
 time.sleep(1)
 
@@ -102,4 +102,4 @@ for i in range(2, balls+1):
 
 #Using the 68-95-99.7 rule of the normal curve to compare the result to a true normal curve
 
-  print("Actual: {0:.2f}%        ".format(p1),"{0:.2f}%          ".format(p2).ljust(10),"{0:.2f}%   ".format(p3).ljust(10),"Sx of μ: {0:.2f} ".format(sd/math.sqrt(i)).ljust(10))
+  print("Actual: {0:.2f}%  \t".format(p1),"{0:.2f}%  \t".format(p2),"{0:.2f}%   \t".format(p3),"{0:.2f}  \t".format(sd/math.sqrt(i)))
