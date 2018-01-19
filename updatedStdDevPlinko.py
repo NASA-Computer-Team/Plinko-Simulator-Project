@@ -1,9 +1,11 @@
 import time
+
+                                                                                                 
 import random
 import math
-
+'''
 random.seed()
-
+                                                                                                  
 #if these two values mutiplied together is "too big", it will take a long time to run the program
 #both values have an effect on the result
 balls = int(input("How many balls?"))
@@ -32,8 +34,8 @@ def generate(max):
   #return the postion of the balls
   
   return instance
-
-
+'''
+                                                                                                  
 #find the mean of the result 
 def mean(list):
 
@@ -60,7 +62,9 @@ def standDev(list):
     sx = math.sqrt(sum/(count-1))
 
     return sx
+-----------------------------------------------------------------------
 
+'''
 #excute the simulation
 posList = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}
 #force the list to have more than one ball in it at the beginning so standard deviation can be calculated.
@@ -76,6 +80,10 @@ for i in range(2, balls+1):
   #add the ball into the resulting list and calulate the new mean and standard deviation
   r = generate(layer)
   posList[r] = posList[r] + 1
+  '''
+  
+  
+                                                                                                    #JS TRANSLATE
   m = mean(posList)
   sd = standDev(posList)
   
@@ -103,3 +111,4 @@ for i in range(2, balls+1):
 #Using the 68-95-99.7 rule of the normal curve to compare the result to a true normal curve
 
   print("Actual: {0:.2f}%  \t".format(p1),"{0:.2f}%  \t".format(p2),"{0:.2f}%   \t".format(p3),"{0:.2f}  \t".format(sd/math.sqrt(i)))
+                                                                                                  #JS TRANSLATE
