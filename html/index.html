@@ -1,0 +1,313 @@
+
+<html>
+
+<head>
+	<title> PLINKO SIMULATOR BY LNHS</title>
+	
+
+
+
+  <!-- Angular Material style sheet -->
+  <script src="sources/jquery.min.js"></script>
+  <link rel="stylesheet" href="sources/angular-material.min.css">
+
+     <script>
+
+
+
+  </script>
+  
+  
+  
+   <script src="sources/angular.min.js" ></script>
+  <script src="sources/angular-animate.min.js" ></script>
+  <script src="sources/angular-aria-min.js" ></script>
+  <script src="sources/angular-messages.min.js" ></script>
+
+  <!-- Angular Material Library -->
+  <script src="sources/angular-material.min.js" ></script>
+</head>
+
+<body id="body" ng-app="app" ng-controller="alpha" ng-cloak>
+	
+<style>
+   body {
+    font-family: sans-serif;
+}
+
+div.chip {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: blue;
+}
+#plinko-board {
+    position: relative;
+    margin-top: 2em;
+    width: 400px;
+    height: 200px;
+    background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/25877/board.png');
+}
+ul.buckets, ul.percents {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    padding: 0 !important;
+    margin: 5px 0;
+}
+ul.buckets {
+    bottom: -2em;
+    border-bottom: 1px solid black;
+}
+ul.percents {
+    bottom: -3.5em;
+    padding: 0 !important;
+}
+ul.buckets li, ul.percents li {
+    list-style: none;
+    float: left;
+    display: block;
+    margin-left: 10.45%;
+    width: 31px;
+    text-align: center;
+}
+</style>
+
+
+<md-input-container>
+        <label>Interval</label>
+        <input ng-model="interval">
+      </md-input-container><md-input-container>
+        <label>Speed</label>
+        <input ng-model="speed">
+      </md-input-container>
+
+<md-switch ng-model="graphics" >
+    Graphics
+  </md-switch>
+  
+  
+<md-input-container>
+          <label>Side Preference</label>
+          <md-select ng-model="side">
+           
+            <md-option ng-value="'normal'" >
+             NORMAL
+            </md-option><md-option ng-value="'left'" >
+             LEFT Only
+            </md-option><md-option ng-value="'right'" >
+             RIGHT Only
+            </md-option>
+          </md-select>
+        </md-input-container>
+
+
+	TOTAL: <span id="total">0</span>
+<div id="plinko-board">
+        <ul class="buckets">
+            <li id="one">0</li>
+            <li id="two">0</li>
+            <li id="three">0</li>
+            <li id="four">0</li>
+            <li id="five">0</li>
+        </ul>
+        <ul class="percents">
+            <li id="one_percent">0.00%</li>
+            <li id="two_percent">0.00%</li>
+            <li id="three_percent">0.00%</li>
+            <li id="four_percent">0.00%</li>
+            <li id="five_percent">0.00%</li>
+        </ul>
+    </div>
+    
+   
+
+ 
+ 
+ <script>
+   var app =  angular.module('app', ['ngMaterial']);
+	
+	 app.controller("alpha",function($scope){
+		 console.log("Scope is ready!");
+		 
+		 
+		 
+		 
+		 $scope.buckets = {
+	drops: 0,
+	1: 0,
+	2: 0,
+	3: 0,
+	4: 0,
+	5: 0
+};
+
+$scope.interval = 0;
+
+var Alltotal = 0 ;
+
+		 $scope.graphics = true;
+$scope.side = 'normal';
+$scope.speed = 100;		 
+
+
+
+$(document).ready(function(){
+    
+   setInterval(function(){
+	    Alltotal++;
+       			var chip = new Chip('plinko-board', $scope.speed);
+			chip.start();
+	  
+   },$scope.interval)
+
+    
+})
+
+
+function updateStat(selector, count, percent) {
+	
+	
+	$(selector).text(count);
+	$(selector + '_percent').text(percent);
+}
+function updateBuckets() {
+	
+	var selectors = [ '#one', '#two', '#three', '#four', '#five'];
+	$.each(selectors, function(i, e) {
+		var count = $scope.buckets[i+1];
+		var percent = (($scope.buckets[i+1] / $scope.buckets.drops) * 100).toFixed(2) + '%';
+		updateStat(e, count, percent);
+	});
+	$("#total").text(Alltotal);
+}
+		 
+function getRandom(specifications) {
+	if(specifications.path.length <  1){
+	if($scope.side == "left" ) return -1;
+	if($scope.side == "right" ) return 1;
+	}
+	var random = Math.floor(Math.random()*2);
+	return random === 0 ? -1 : 1;
+}
+function getBucket(chip) {
+	var total = 0;
+	
+	$.each(chip.path, function(i, e) {
+		total += e;
+	});
+	switch(total) {
+		case -4:
+			$scope.buckets[1]++;
+			break;
+		case -2:
+			$scope.buckets[2]++;
+			break;
+		case 0:
+			$scope.buckets[3]++;
+			break;
+		case 2:
+			$scope.buckets[4]++;
+			break;
+		case 4:
+			$scope.buckets[5]++;
+			break;
+		default:
+			break;
+	}
+	$scope.buckets.drops++;
+	updateBuckets();
+        $(chip.el).remove();
+}
+function printPath(path) {
+	// for debugging
+	// Shows path, 0 is left, 1 is right
+	var directions = [];
+	$.each(path, function(i, e) {
+		var dir = e < 0 ? 'left' : 'right';
+		directions.push(dir);
+	});
+	//console.log('New path: ' + directions);
+}
+var Chip = function(boardId, speed) {
+	
+	this.board = $('#' + boardId);
+	this.speed = speed;
+	this.location = {
+		x: this.board.width() / 2,
+		y: 0
+	};
+	this.lastStep = 0;
+	var chip = $('<div class="chip"></div>');
+	this.board.append(chip);
+	this.el = $(chip);
+	this.el.css('left', this.location.x + 'px').css('top', this.location.y + 'px');
+};
+
+Chip.prototype.start = function() {
+	var self = this;
+	self.path = [];
+	for (var i=0; i<4; i++) {
+		self.path.push(getRandom({path: self.path}));
+	}
+	printPath(self.path);
+	this.nextStep();
+};
+Chip.prototype.nextStep = function() {
+	var self = this;
+	if (self.lastStep < 4) {
+		var offset = self.path[self.lastStep] < 0 ? -2  : 2;
+		self.animateTo({
+			x: offset,
+			y: 2
+		});
+	} else {
+		getBucket(self);
+	}
+};
+Chip.prototype.animateTo = function(offset) {
+	if(!$scope.graphics){
+				var self = this;
+	self.lastStep++;
+		self.nextStep();	
+		
+	}
+		var self = this;
+	var step = {
+		x : self.board.height() / 11,
+		y : self.board.width() / 17
+	};
+	jQuery(self.el).animate({
+		left: '+=' + (step.x * offset.x),
+		top: '+=' + (step.y * offset.y)
+	}, self.speed, function() {
+		self.location.x = self.el.css('left');
+		self.location.y = self.el.css('top');
+		self.lastStep++;
+		self.nextStep();
+	});
+	
+};
+
+
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+	 })
+	 
+	 
+	</script>
+
+
+
+
+
+
+
+
