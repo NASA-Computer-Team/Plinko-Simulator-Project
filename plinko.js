@@ -3,8 +3,8 @@
 //if n%2=1 slots, midpoint is index floor((plinkoArray.length)/2)
 //if n%2=0 slots, no midpoint, -1 is index ((plinkoArray.length/2)-1), +1 is index (plinkoArray.length/2)
 
-var plinkoArray = [0, 2, 2, 2, 2, 2, 0];
 
+var plinkoArray = [0, 2, 2, 2, 2, 2, 0];
 //finding mean
 function findMean(dataArray){
   var total = 0;
@@ -19,9 +19,9 @@ function findMean(dataArray){
 }
 
 //finding (xi - xbar)^2
-function standDev(dataArray){
+function standDev(dataArray, mean){
   var sum = 0;
-  var m = findMean(dataArray);
+  var m = mean;
   var count = 0;
   for (var i = 0; i < dataArray.length; i++){
     count += dataArray[i];
@@ -35,43 +35,40 @@ function standDev(dataArray){
   return sx;
 }
 
-console.log(findMean(plinkoArray));
-console.log(standDev(plinkoArray));
 
-
-
-//for (var i = 1; i <= ; i++){
-//determine where ball ends up (engine)
-	var mean = findMean(plinkoArray);
-	var sX = standDev(plinkoArray);
-	//standDevMean = (sX/Math.sqrt(i));
-  console.log("Mean = " + mean + "\nStandard Dev. = " + sX + "\nStandard Dev. of Mean = ");
-
-
-
-
-var amountArray = [0,0,0,0] //index 0 = total, index 1 = 3sX, 2 = 2sX, 3 = 1sX
-
-for (var i = 0; i < plinkoArray.length; i++){
-if (i >= (mean - (1*sX)) && i <= (mean + (1*sX))){
-amountArray[3] += plinkoArray[i];
+//Returns percent of balls within n standard deviations
+function findGaussian(dataArray, inMean, inSx){
+	var amountArray = [0,0,0,0]; //index 0 = total, index 1 = 3sX, 2 = 2sX, 3 = 1sX
+	for (var i = 0; i < dataArray.length; i++){
+		if (i >= (inMean - (1*inSx)) && i <= (inMean + (1*inSx))){
+			amountArray[3] += dataArray[i];
+		}
+		if (i >= (inMean - (2*inSx)) && i <= (inMean + (2*inSx))){
+			amountArray[2] += dataArray[i];
+		}
+		if (i >= (inMean - (3*inSx)) && i <= (inMean + (3*inSx))){
+			amountArray[1] += dataArray[i];
+		}
+		amountArray[0] += dataArray[i];
+	}
+	s1 = (amountArray[3]/amountArray[0]) * 100;
+	s2 = (amountArray[2]/amountArray[0]) * 100;
+	s3 = (amountArray[1]/amountArray[0]) * 100;
+	return [s1,s2,s3];
 }
-if (i >= (mean - (2*sX)) && i <= (mean + (2*sX))){
-amountArray[2] += plinkoArray[i];
-}
-if (i >= (mean - (3*sX)) && i <= (mean + (3*sX))){
-amountArray[1] += plinkoArray[i];
-}
-amountArray[0] += plinkoArray[i];
-}
-
-
 //Ideal: 68-95-99.7
-//Actual:
-s1 = (amountArray[3]/amountArray[0]) * 100;
-s2 = (amountArray[2]/amountArray[0]) * 100;
-s3 = (amountArray[1]/amountArray[0]) * 100;
 
 
-console.log(s1 + " " + s2 + " " + s3);
 
+//function per ball
+//returns array std[0], mean[1], stdmean[2], gaussian%[3]
+
+function newBall(dataArray){
+	var mean = findMean(dataArray);
+	var sX = standDev(dataArray, mean);
+	var standDevMean = (sX/Math.sqrt(i));
+	var gaussian = findGaussian(dataArray, mean, sX);
+	
+	return [mean, sX, standDevMean, gaussian];
+  }
+  
