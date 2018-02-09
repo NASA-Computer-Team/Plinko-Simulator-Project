@@ -1,10 +1,11 @@
+//Allows for calculations to be done on output array of plinko simulator
+//Drew Gill and Siyu Chen for NASA Collaboration Project
+
 //using array of size N, where midpoint is 0, find mean and standard deviation
 
-//if n%2=1 slots, midpoint is index floor((plinkoArray.length)/2)
-//if n%2=0 slots, no midpoint, -1 is index ((plinkoArray.length/2)-1), +1 is index (plinkoArray.length/2)
 
-
-var plinkoArray = [0, 2, 2, 2, 2, 2, 0];
+//array is amount of instances of each value (index)
+var plinkoArray = [0, 2, 3, 2, 2, 2, 0, 1, 1, 1];
 //finding mean
 function findMean(dataArray){
   var total = 0;
@@ -51,6 +52,7 @@ function findGaussian(dataArray, inMean, inSx){
 		}
 		amountArray[0] += dataArray[i];
 	}
+	
 	s1 = (amountArray[3]/amountArray[0]) * 100;
 	s2 = (amountArray[2]/amountArray[0]) * 100;
 	s3 = (amountArray[1]/amountArray[0]) * 100;
@@ -59,16 +61,27 @@ function findGaussian(dataArray, inMean, inSx){
 //Ideal: 68-95-99.7
 
 
+function totalBalls(dataArray){
+  var n = 0;
+  for (var i = 0; i < dataArray.length; i++){
+    n += dataArray[i];
+  }
+  return n;
+}
+
 
 //function per ball
-//returns array std[0], mean[1], stdmean[2], gaussian%[3]
+//returns array total[0], mean[1], sx[2], stdmean[3], gaussian%[4]
 
 function newBall(dataArray){
+  var total = totalBalls(dataArray);
 	var mean = findMean(dataArray);
 	var sX = standDev(dataArray, mean);
-	var standDevMean = (sX/Math.sqrt(i));
 	var gaussian = findGaussian(dataArray, mean, sX);
 	
-	return [mean, sX, standDevMean, gaussian];
+	var standDevMean = (sX/Math.sqrt(total));
+	
+	return [total, mean, sX, standDevMean, gaussian];
   }
   
+  console.log(newBall(plinkoArray));
