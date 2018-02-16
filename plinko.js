@@ -59,6 +59,8 @@ function findGaussian(dataArray, inMean, inSx){
 	return [s1,s2,s3];
 }
 //Ideal: 68-95-99.7
+//s1 = proportion within 1 sx, s2 = 2sx, s3 = 3sx
+
 
 
 function totalBalls(dataArray){
@@ -83,5 +85,37 @@ function newBall(dataArray){
 	
 	return [total, mean, sX, standDevMean, gaussian];
   }
+  
+  
+  
+/*H0: p = 0.68
+Ha: p != 0.68
+
+z1 = (s1 - p)/sqrt((p(1-p)/total)
+z2 = (s2 - p)/sqrt((p(1-p)/total)
+z3 = (s3 - p)/sqrt((p(1-p)/total)
+
+|z| < 1.96 , then p-value > 0.05
+fail to reject
+|z| > 1.96, then p value < 0.05
+reject null, conclude Ha, differs from normal curve
+
+
+
+*/
+
+//Returns z test statistic of difference from z1 
+  function nullHypothesis(gaus, tot){
+    z1 = (gaus[0] - p)/Math.sqrt(0.2176/tot);
+    z2 = (gaus[1] - p)/Math.sqrt(.0475/tot);
+    z3 = (gaus[2] - p)/Math.sqrt(.002991/tot);
+    
+    var curve = [z1, z2, z3];
+    
+    return curve;
+  }
+  
+  
+  
   
   console.log(newBall(plinkoArray));
