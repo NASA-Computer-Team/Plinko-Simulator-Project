@@ -5,7 +5,7 @@
 
 
 //array is amount of instances of each value (index)
-var plinkoArray = [0, 2, 3, 2, 2, 2, 0, 1, 1, 100];
+var plinkoArray = [0, 2, 3, 2, 2, 2, 0, 1, 1, 1];
 //finding mean
 function findMean(dataArray){
   var total = 0;
@@ -91,8 +91,22 @@ function newBall(dataArray){
   
   
   
-/*H0: p = 0.68
-Ha: p != 0.68
+/*
+State:
+H0: p = 0.68; 0.95; 0.997
+Ha: p != 0.68; 0.95; 0.997
+p = true proportion of balls within 1/2/3 sX
+
+Plan:
+SRS - is randomly selected, n = up to Infinity
+Independent
+Normal = np0 >= 10; n(1-p0) >= 10
+Lowest necessary n:
+for 1sx = (10/.32) = 32
+for 2sx = (10/.05) = 200
+for 3sx = (10/.003) = 3334
+
+
 
 z1 = (s1 - p)/sqrt((p(1-p)/total)
 z2 = (s2 - p)/sqrt((p(1-p)/total)
