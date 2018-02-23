@@ -5,7 +5,7 @@
 
 
 //array is amount of instances of each value (index)
-var plinkoArray = [0, 2, 3, 2, 2, 2, 0, 1, 1, 1];
+var plinkoArray = [100, 200, 400, 500, 700, 700, 400, 200, 100, 50];
 //finding mean
 function findMean(dataArray){
   var total = 0;
@@ -86,7 +86,17 @@ function newBall(dataArray){
 	
 	var standDevMean = (sX/Math.sqrt(total));
 	
-	return [total, mean, sX, standDevMean, gaussian, nullHyp];
+	//key-value pairs
+  var dict = {
+    "total": total,
+    "mean": mean,
+    "standDev": sX,
+    "standDevMean": standDevMean,
+    "gaussian": gaussian,
+    "nullHyp": nullHyp
+  };
+	
+	return dict;
   }
   
   
@@ -146,7 +156,12 @@ reject null, conclude Ha, differs from normal curve
     if (Math.abs(zStat[2]) > 1.96)
       rejectNull[2] = true;  
       
-    return rejectNull;
+    if((rejectNull[0] === false) && (rejectNull[1] === false) && (rejectNull[2] === false))  
+      return true; //Fail to reject null in all cases
+    else
+      return false; //Reject null, not normal
   }
   
-  console.log(newBall(plinkoArray));
+  var testDictle = newBall(plinkoArray);
+  
+  console.log(testDictle["gaussian"]);
