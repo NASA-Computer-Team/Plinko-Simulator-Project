@@ -5,7 +5,7 @@
 
 
 //array is amount of instances of each value (index)
-var plinkoArray = [100, 200, 400, 500, 700, 700, 400, 200, 100, 50];
+var plinkoArray = [0, 1, 19, 52, 135, 247, 367, 409, 430, 272, 105, 40, 14, 2];
 //finding mean
 function findMean(dataArray){
   var total = 0;
@@ -162,6 +162,27 @@ reject null, conclude Ha, differs from normal curve
       return false; //Reject null, not normal
   }
   
-  var testDictle = newBall(plinkoArray);
+  /*Can't use individual t-testing
+  Use Chi-Squared Goodness of Fit test
+  Sum of (o-e)^2/e
+  (gaus[0] - 0.68)^2 / 0.68
+  (gaus[1] - 0.95)^2 / 0.95
+  (gaus[2] - 0.997)^2 / 0.997
+  */
   
-  console.log(testDictle["gaussian"]);
+  //Assume alpha = 0.05
+  //H0 = distribution follows normal distribution
+  //Ha = distribution does not follow normal distribution
+  //df = 2
+  //if sum >= 5.99, p is low, reject null
+  function chiTestStatistic(gaus){
+    var sum = 0;
+    sum += (Math.pow((gaus[0] - 0.68), 2))/0.68;
+    sum += (Math.pow((gaus[1] - 0.95), 2))/0.95;
+    sum += (Math.pow((gaus[2] - 0.997), 2))/0.997;
+    var isNormal = (sum < 5.99);
+    return [sum, isNormal];
+  }
+  
+  
+console.log(newBall(plinkoArray));
