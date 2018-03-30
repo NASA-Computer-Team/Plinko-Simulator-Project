@@ -5,7 +5,7 @@
 
 
 //array is amount of instances of each value (index)
-var plinkoArray = [0, 1, 19, 52, 135, 247, 367, 409, 430, 272, 105, 40, 14, 2];
+var plinkoArray = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 1];
 //finding mean
 function findMean(dataArray){
   var total = 0;
@@ -83,6 +83,8 @@ function newBall(dataArray){
 	var sX = standDev(dataArray, mean);
 	var gaussian = findGaussian(dataArray, mean, sX);
 	var nullHyp = nullHypothesis(zStats(gaussian, total));
+	var chiSquaredValue = chiTestStatistic(gaussian)[0];
+	var normalTest = chiTestStatistic(gaussian)[1];
 	
 	var standDevMean = (sX/Math.sqrt(total));
 	
@@ -93,7 +95,10 @@ function newBall(dataArray){
     "standDev": sX,
     "standDevMean": standDevMean,
     "gaussian": gaussian,
-    "nullHyp": nullHyp
+    "nullHyp": nullHyp,
+    "X2value": chiSquaredValue,
+    "isNormal": normalTest
+    
   };
 	
 	return dict;
@@ -106,7 +111,6 @@ State:
 H0: p = 0.68; 0.95; 0.997
 Ha: p != 0.68; 0.95; 0.997
 p = true proportion of balls within 1/2/3 sX
-
 Plan:
 SRS - is randomly selected, n = up to Infinity
 Independent
@@ -115,20 +119,13 @@ Lowest necessary n:
 for 1sx = (10/.32) = 32
 for 2sx = (10/.05) = 200
 for 3sx = (10/.003) = 3334
-
-
-
 z1 = (s1 - p)/sqrt((p(1-p)/total)
 z2 = (s2 - p)/sqrt((p(1-p)/total)
 z3 = (s3 - p)/sqrt((p(1-p)/total)
-
 |z| < 1.96 , then p-value > 0.05
 fail to reject
 |z| > 1.96, then p value < 0.05
 reject null, conclude Ha, differs from normal curve
-
-
-
 */
 
 //Returns z test statistic of difference from z1 
@@ -176,13 +173,16 @@ reject null, conclude Ha, differs from normal curve
   //df = 2
   //if sum >= 5.99, p is low, reject null
   function chiTestStatistic(gaus){
-    var sum = 0;
-    sum += (Math.pow((gaus[0] - 0.68), 2))/0.68;
-    sum += (Math.pow((gaus[1] - 0.95), 2))/0.95;
-    sum += (Math.pow((gaus[2] - 0.997), 2))/0.997;
-    var isNormal = (sum < 5.99);
-    return [sum, isNormal];
+    var chiSquared = 0;
+    chiSquared += (Math.pow((gaus[0]*100 - 68), 2))/68;
+    chiSquared += (Math.pow((gaus[1]*100 - 95), 2))/95;
+    chiSquared += (Math.pow((gaus[2]*100 - 99.7), 2))/99.7;
+    var isNormal = (chiSquared < 5.99);
+    return [chiSquared, isNormal];
   }
+  
+  
+  
   
   
 console.log(newBall(plinkoArray));
