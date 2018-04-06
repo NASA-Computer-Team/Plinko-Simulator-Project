@@ -1,25 +1,6 @@
 //Allows for calculations to be done on output array of plinko simulator
 //Drew Gill and Siyu Chen for NASA Collaboration Project
 
-//using array of size N, where midpoint is 0, find mean and standard deviation
-
-
-//array is amount of instances of each value (index)
-var plinkoArray = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 1];
-//finding mean
-function findMean(dataArray){
-  var total = 0;
-  var count = 0;
-  for (var i = 0; i < dataArray.length; i++){
-    total += i*dataArray[i];
-    count += dataArray[i];
-  }
-  //Allows for calculations to be done on output array of plinko simulator
-//Drew Gill and Siyu Chen for NASA Collaboration Project
-
-//using array of size N, where midpoint is 0, find mean and standard deviation
-
-
 //array is amount of instances of each value (index)
 var plinkoArray = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 1];
 //finding mean
