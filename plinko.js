@@ -75,6 +75,19 @@ function findGaussian(dataArray, inMean, inSx){
     return [chiSquared, isNormal];
   }
   
+  
+  
+
+  
+  /*Hypothesis Test for mean
+  
+  
+  */
+  function hypTestForMean(dataArray, total){
+    z = (mean - ((dataArray.length - 1)/2))/Math.sqrt();
+  }
+  
+  
   //function per ball
 //returns array total[0], mean[1], sx[2], stdmean[3], gaussian%[4]
   function newBall(dataArray, total){
