@@ -5,7 +5,7 @@
 
 
 //array is amount of instances of each value (index)
-var plinkoArray = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 1]; //SAMPLE ARRAY
+var plinkoArray = [1, 2, 50, 4, 5, 6, 50, 3, 7, 6, 5, 4, 3, 2, 1]; //SAMPLE ARRAY
 //finding mean
 function findMean(dataArray, total){
   let sum = 0;
@@ -77,15 +77,17 @@ function findGaussian(dataArray, inMean, inSx){
   }
   
   /*Hypothesis Test for mean
-  H0: mean != 0
-  HA: mean == 0
+  H0: mean == 0
+  HA: mean != 0
   alpha = 0.05
   assume df > 1000
   returns true if H0 is rejected and HA is true, false if H0 cannot be rejected
+  
+  return[0] = t-test statistic, return[1] = result of test
   */
   function hypTestForMean(dataArray, mean, total, std){
-    let t = (mean - ((dataArray.length - 1)/2))/(std/Math.sqrt(total)); //t-test statistic
-    return (t < 1.96);
+    var t = Math.abs((mean - ((dataArray.length - 1)/2))/(std/Math.sqrt(total))); //t-test statistic
+    return [t, (t < 1.96)];
   }
   
   
@@ -98,7 +100,9 @@ function findGaussian(dataArray, inMean, inSx){
   	var chiTestResult = chiTestStatistic(gaussian);
   	var chiSquaredValue = chiTestResult[0];
   	var normalTest = chiTestResult[1];
-  	var nullHyp = hypTestForMean(dataArray, mean, total, sX);
+  	var hypTestResult = hypTestForMean(dataArray, mean, total, sX);
+  	var tTestStat = hypTestResult[0];
+  	var nullHyp = hypTestResult[1];
   	var standDevMean = (sX/Math.sqrt(total));
   	//key-value pairs
     var dict = {
@@ -107,10 +111,11 @@ function findGaussian(dataArray, inMean, inSx){
       "standDev": sX,
       "standDevMean": standDevMean,
       "gaussian": gaussian,
-      "meanIsZero": nullHyp,
       "X2value": chiSquaredValue,
-      "isNormal": normalTest
+      "isNormal": normalTest,
+      "tTestStatistic": tTestStat,
+      "meanIsZero": nullHyp
     };
 	return dict;
   }
-console.log(newBall(plinkoArray, 58)); //58 is TESTING VALUE. Replace with TOTAL output.
+console.log(newBall(plinkoArray, 156)); //58 is TESTING VALUE. Replace with TOTAL output.
