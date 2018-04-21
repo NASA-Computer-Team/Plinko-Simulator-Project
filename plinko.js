@@ -1,12 +1,11 @@
 
-  //Allows for calculations to be done on output array of plinko simulator
+//Allows for calculations to be done on output array of plinko simulator
 //Drew Gill and Siyu Chen for NASA Collaboration Project
-
-//using array of size N, where midpoint is 0, find mean and standard deviation
+//Graphically displayed and simulated in program by Pedro Moter
 
 
 //array is amount of instances of each value (index)
-var plinkoArray = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 1];
+var plinkoArray = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 1]; //SAMPLE ARRAY
 //finding mean
 function findMean(dataArray, total){
   let sum = 0;
@@ -54,7 +53,7 @@ function findGaussian(dataArray, inMean, inSx){
 }
 
   /*CHI SQUARED TESTING
-  Can't use individual z-testing
+  DETERMINE IF DISTRIBUTION IS NORMAL
   Use Chi-Squared Goodness of Fit test
   Sum of (o-e)^2/e
   (gaus[0] - 0.68)^2 / 0.68
@@ -65,6 +64,8 @@ function findGaussian(dataArray, inMean, inSx){
   Ha = distribution does not follow normal distribution
   df = 2
   if sum >= 5.99, p is low, reject null
+  
+  RETURNS true if is normal (cannot reject null), false if null hyp is rejected
   */
   function chiTestStatistic(gaus){
     var chiSquared = 0;
@@ -75,16 +76,16 @@ function findGaussian(dataArray, inMean, inSx){
     return [chiSquared, isNormal];
   }
   
-  
-  
-
-  
   /*Hypothesis Test for mean
-  
-  
+  H0: mean != 0
+  HA: mean == 0
+  alpha = 0.05
+  assume df > 1000
+  returns true if H0 is rejected and HA is true, false if H0 cannot be rejected
   */
-  function hypTestForMean(dataArray, total){
-    z = (mean - ((dataArray.length - 1)/2))/Math.sqrt();
+  function hypTestForMean(dataArray, mean, total, std){
+    let t = (mean - ((dataArray.length - 1)/2))/(std/Math.sqrt(total)); //t-test statistic
+    return (t < 1.96);
   }
   
   
@@ -94,8 +95,10 @@ function findGaussian(dataArray, inMean, inSx){
   	var mean = findMean(dataArray, total);
   	var sX = standDev(dataArray, mean);
   	var gaussian = findGaussian(dataArray, mean, sX);
-  	var chiSquaredValue = chiTestStatistic(gaussian)[0];
-  	var normalTest = chiTestStatistic(gaussian)[1];
+  	var chiTestResult = chiTestStatistic(gaussian);
+  	var chiSquaredValue = chiTestResult[0];
+  	var normalTest = chiTestResult[1];
+  	var nullHyp = hypTestForMean(dataArray, mean, total, sX);
   	var standDevMean = (sX/Math.sqrt(total));
   	//key-value pairs
     var dict = {
@@ -104,10 +107,10 @@ function findGaussian(dataArray, inMean, inSx){
       "standDev": sX,
       "standDevMean": standDevMean,
       "gaussian": gaussian,
-      "nullHyp": nullHyp,
+      "meanIsZero": nullHyp,
       "X2value": chiSquaredValue,
       "isNormal": normalTest
     };
 	return dict;
   }
-console.log(newBall(plinkoArray));
+console.log(newBall(plinkoArray, 58)); //58 is TESTING VALUE. Replace with TOTAL output.
