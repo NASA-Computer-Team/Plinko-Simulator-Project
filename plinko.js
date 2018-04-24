@@ -1,40 +1,48 @@
-
 //Allows for calculations to be done on output array of plinko simulator
 //Drew Gill and Siyu Chen for NASA Collaboration Project
 //Graphically displayed and simulated in program by Pedro Moter
 
-
 //array is amount of instances of each value (index)
-var plinkoArray = [1, 2, 50, 4, 5, 6, 50, 3, 7, 6, 5, 4, 3, 2, 1]; //SAMPLE ARRAY
+let plinkoArray = [1, 2, 50, 4, 5, 6, 50, 3, 7, 6, 5, 4, 3, 2, 100]; //SAMPLE ARRAY
+
 //finding mean
 function findMean(dataArray, total){
   let sum = 0;
-  for (var i = 0; i < dataArray.length; i++){
+  for (let i = 0; i < dataArray.length; i++){
     sum += i*dataArray[i];
   }
-  var mean = sum/total;
+  let mean = sum/total;
   return mean;
+}
+
+//Used for testing, not necessary anywhere else
+function findTotal(dataArray){
+  let sum = 0;
+  for (let i = 0; i < dataArray.length; i++){
+    sum += dataArray[i];
+  }
+  return sum;
 }
 
 //finding (xi - xbar)^2
 function standDev(dataArray, mean){
-  var sum = 0;
-  var m = mean;
-  var count = 0;
-  for (var i = 0; i < dataArray.length; i++){
+  let sum = 0;
+  let m = mean;
+  let count = 0;
+  for (let i = 0; i < dataArray.length; i++){
     count += dataArray[i];
-    for (var j = 0; j < dataArray[i]; j++){
+    for (let j = 0; j < dataArray[i]; j++){
       sum += ((i-m) * (i-m));
     }
   }
-  var sx = Math.sqrt(sum/(count-1));
+  let sx = Math.sqrt(sum/(count-1));
   return sx;
 }
 
 //Returns percent of balls within n standard deviations
 function findGaussian(dataArray, inMean, inSx){
-	var amountArray = [0,0,0,0]; //index 0 = total, index 1 = 3sX, 2 = 2sX, 3 = 1sX
-	for (var i = 0; i < dataArray.length; i++){
+	let amountArray = [0,0,0,0]; //index 0 = total, index 1 = 3sX, 2 = 2sX, 3 = 1sX
+	for (let i = 0; i < dataArray.length; i++){
 		if (i >= (inMean - (1*inSx)) && i <= (inMean + (1*inSx))){
 			amountArray[3] += dataArray[i];
 		}
@@ -65,14 +73,15 @@ function findGaussian(dataArray, inMean, inSx){
   df = 2
   if sum >= 5.99, p is low, reject null
   
+  
   RETURNS true if is normal (cannot reject null), false if null hyp is rejected
   */
   function chiTestStatistic(gaus){
-    var chiSquared = 0;
+    let chiSquared = 0;
     chiSquared += (Math.pow((gaus[0]*100 - 68), 2))/68;
     chiSquared += (Math.pow((gaus[1]*100 - 95), 2))/95;
     chiSquared += (Math.pow((gaus[2]*100 - 99.7), 2))/99.7;
-    var isNormal = (chiSquared < 5.99);
+    let isNormal = (chiSquared < 5.99);
     return [chiSquared, isNormal];
   }
   
@@ -86,7 +95,7 @@ function findGaussian(dataArray, inMean, inSx){
   return[0] = t-test statistic, return[1] = result of test
   */
   function hypTestForMean(dataArray, mean, total, std){
-    var t = Math.abs((mean - ((dataArray.length - 1)/2))/(std/Math.sqrt(total))); //t-test statistic
+    let t = Math.abs((mean - ((dataArray.length - 1)/2))/(std/Math.sqrt(total))); //t-test statistic
     return [t, (t < 1.96)];
   }
   
@@ -94,18 +103,18 @@ function findGaussian(dataArray, inMean, inSx){
   //function per ball
 //returns array total[0], mean[1], sx[2], stdmean[3], gaussian%[4]
   function newBall(dataArray, total){
-  	var mean = findMean(dataArray, total);
-  	var sX = standDev(dataArray, mean);
-  	var gaussian = findGaussian(dataArray, mean, sX);
-  	var chiTestResult = chiTestStatistic(gaussian);
-  	var chiSquaredValue = chiTestResult[0];
-  	var normalTest = chiTestResult[1];
-  	var hypTestResult = hypTestForMean(dataArray, mean, total, sX);
-  	var tTestStat = hypTestResult[0];
-  	var nullHyp = hypTestResult[1];
-  	var standDevMean = (sX/Math.sqrt(total));
+  	let mean = findMean(dataArray, total);
+  	let sX = standDev(dataArray, mean);
+  	let gaussian = findGaussian(dataArray, mean, sX);
+  	let chiTestResult = chiTestStatistic(gaussian);
+  	let chiSquaredValue = chiTestResult[0];
+  	let normalTest = chiTestResult[1];
+  	let hypTestResult = hypTestForMean(dataArray, mean, total, sX);
+  	let tTestStat = hypTestResult[0];
+  	let nullHyp = hypTestResult[1];
+  	let standDevMean = (sX/Math.sqrt(total));
   	//key-value pairs
-    var dict = {
+    let dict = {
       "total": total,
       "mean": mean,
       "standDev": sX,
@@ -118,4 +127,6 @@ function findGaussian(dataArray, inMean, inSx){
     };
 	return dict;
   }
-console.log(newBall(plinkoArray, 156)); //58 is TESTING VALUE. Replace with TOTAL output.
+  
+  //test output
+console.log(newBall(plinkoArray, findTotal(plinkoArray))); //uses findTotal to TEST, replace with actual total value from simulation
