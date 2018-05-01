@@ -123,7 +123,7 @@ function findGaussian(dataArray, inMean, inSx){
       "X2value": chiSquaredValue,
       "isNormal": normalTest,
       "tTestStatistic": tTestStat,
-      "meanIsZero": nullHyp
+      "meanIsMidpoint": nullHyp
     };
 	return dict;
   }
